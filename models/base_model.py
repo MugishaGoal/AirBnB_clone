@@ -44,6 +44,7 @@ class BaseModel:
             "updated_at": self.updated_at.isoformat()
         }
 
+
     def __str__(self):
         """Returns a string representation of the object."""
         class_name = self.__class__.__name__
