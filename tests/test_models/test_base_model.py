@@ -1,35 +1,50 @@
 #!/usr/bin/python3
-"""Defines unittests for models/base_model.py"""
-import unittest
-from models.base_model import BaseModel
+"""A class that defines common attributes and methods for other classes."""
+import uuid
+from datetime import datetime
 
 
-class TestBaseModel(unittest.TestCase):
-    def test_creation(self):
-        my_model = BaseModel()
-        self.assertIsInstance(my_model, BaseModel)
+class BaseModel:
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize a new BaseModel.
 
-    def test_string_representation(self):
-        my_model = BaseModel()
-        expected_str = "[BaseModel] ({}) {}".format(
-                my_model.id, my_model.__dict__)
-        self.assertEqual(str(my_model), expected_str)
+        Args:
+            *args: Unused.
+            **kwargs: Keyword arguments representing attributes and values.
+        """
+        time_format = "%Y-%m-%dT%H:%M:%S.%f"
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == 'created_at' or key == 'updated_at':
+                    setattr(self, key, datetime.strptime(value, time_format))
+                else:
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = self.updated_at = datetime.now()
 
-    def test_save_method(self):
-        my_model = BaseModel()
-        original_updated_at = my_model.updated_at
-        my_model.save()
-        self.assertNotEqual(my_model.updated_at, original_updated_at)
+    def save(self):
+        """Updates the 'updated_at' attribute with the current datetime."""
+        self.updated_at = datetime.now()
 
-    def test_to_dict_method(self):
-        my_model = BaseModel()
-        my_model_dict = my_model.to_dict()
-        self.assertIsInstance(my_model_dict, dict)
-        self.assertEqual(my_model_dict['__class__'], 'BaseModel')
-        self.assertIn('id', my_model_dict)
-        self.assertIn('created_at', my_model_dict)
-        self.assertIn('updated_at', my_model_dict)
+    def to_dict(self):
+        """
+        Returns a dictionary representation of the object.
+        - The dictionary contains all instance attributes.
+        - A '__class__' key is added to indicate the class name.
+        - 'created_at' and 'updated_at' are represented
+        as ISO-formatted strings.
+        """
+        class_name = self.__class__.__name__
+        return {
+            "__class__": class_name,
+            "id": self.id,
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()
+        }
 
-
-if __name__ == '__main__':
-    unittest.main()
+    def __str__(self):
+        """Returns a string representation of the object."""
+        class_name = self.__class__.__name__
+        return "[{}] ({}) {}".format(class_name, self.id, self.__dict__)
