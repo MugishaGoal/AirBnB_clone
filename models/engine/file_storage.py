@@ -3,6 +3,12 @@
 import json
 from models.base_model import BaseModel
 from os import path
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
@@ -34,27 +40,24 @@ class FileStorage:
         Returns:
             dict: A dictionary containing all stored instances.
         """
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
         """
-        Adds a new instance to the dictionary of objects.
-
-        Args:
-            obj (BaseModel): The instance to be added.
+        Takes an object obj, gets the name of its class, and uses that along
+        with the object's id to create a unique key.
         """
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        self.__objects[key] = obj
+        ocl_name = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(ocl_name, obj.id)] = obj
 
     def save(self):
         """
         Serializes and saves instances from memory to the JSON file.
         """
-        data = {}
-        for key, obj in self.__objects.items():
-            data[key] = obj.to_dict()
-        with open(self.__file_path, "w", encoding="utf-8") as file:
-            json.dump(data, file)
+        o_dict = FileStorage.__objects
+        obj_dict = {obj: o_dict[obj].to_dict() for obj in o_dict.keys()}
+        with open(FileStorage.__file_path, "w") as file:
+            json.dump(obj_dict, file)
 
     def reload(self):
         """
@@ -62,10 +65,12 @@ class FileStorage:
 
         If the JSON file exists, it reads the data and creates instances.
         """
-        if path.exists(self.__file_path):
-            with open(self.__file_path, "r", encoding="utf-8") as file:
-                data = json.load(file)
-                for key, value in data.items():
-                    class_name, obj_id = key.split(".")
-                    obj = models.classes[class_name](**value)
-                    self.__objects[key] = obj
+        with open(FileStorage.__file_path) as file:
+            obj_dict = json.load(file)
+            for ob in obj_dict.values():
+                class_name = ob["__class__"]
+                del ob["__class__"]
+                self.new(eval(class_name)(**ob))
+
+        except FileNotFoundError:
+            return
