@@ -14,12 +14,12 @@ class BaseModel:
             *args: Unused.
             **kwargs: Keyword arguments representing attributes and values.
         """
-        time_format = "%Y-%m-%dT%H:%M:%S.%f"
+        time_fmt = "%Y-%m-%dT%H:%M:%S.%f"
         if kwargs:
             for key, value in kwargs.items():
                 if key != '__class__':
                     if key == 'created_at' or key == 'updated_at':
-                        setattr(self, key, datetime.strptime(value, time_format))
+                        setattr(self, key, datetime.strptime(value, time_fmt))
                     else:
                         setattr(self, key, value)
                 else:
