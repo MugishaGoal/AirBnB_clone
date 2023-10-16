@@ -1,40 +1,41 @@
 #!/usr/bin/python3
 """A class that defines common attributes and methods for other classes."""
 import models
-import uuid
+from uuid import uuid4
 from datetime import datetime
 
 
 class BaseModel:
+    """Represents the class BaseModel of the HBnB project."""
+
     def __init__(self, *args, **kwargs):
         """
         Initialize a new BaseModel.
 
         Args:
-            *args: Unused.
-            **kwargs: Keyword arguments representing attributes and values.
+            *args (any): Unused.
+            **kwargs (dict): Key/value pairs of attributes.
         """
-        time_fmt = "%Y-%m-%dT%H:%M:%S.%f"
+        t_form = "%Y-%m-%dT%H:%M:%S.%f"
+        self.id = str(uuid4())
+        self.created_at = datetime.today()
+        self.updated_at = datetime.today()
         if kwargs:
             for key, value in kwargs.items():
-                if key != '__class__':
-                    if key == 'created_at' or key == 'updated_at':
-                        setattr(self, key, datetime.strptime(value, time_fmt))
-                    else:
-                        setattr(self, key, value)
-        if 'id' not in kwargs:
-            self.id = str(uuid4())
-        if 'created_at' not in kwargs:
-            self.created_at = self.updated_at = datetime.now()
-        models.storage.new(self)
+                if key == "created_at" or key == "updated_at":
+                    setattr(self, key, datetime.strptime(value, t_form))
+                else:
+                    setattr(self, key, value)
+        else:
+            models.storage.new(self)
 
     def save(self):
         """Updates the 'updated_at' attribute with the current datetime."""
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.today()
         models.storage.save()
 
     def to_dict(self):
-        """
+         """
         Returns a dictionary representation of the object.
         - The dictionary contains all instance attributes.
         - A '__class__' key is added to indicate the class name.
