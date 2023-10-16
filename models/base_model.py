@@ -27,12 +27,12 @@ class BaseModel:
                 else:
                     self.__dict__[k] = v
         else:
-            models.storage.new(self)
+            storage.new(self)
 
     def save(self):
         """Updates the 'updated_at' attribute with the current datetime."""
         self.updated_at = datetime.today()
-        models.storage.save()
+        storage.save()
 
     def to_dict(self):
          """
