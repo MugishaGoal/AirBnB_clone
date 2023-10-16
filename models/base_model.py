@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """A class that defines common attributes and methods for other classes."""
+import models
 import uuid
 from datetime import datetime
 
@@ -21,10 +22,10 @@ class BaseModel:
                         setattr(self, key, datetime.strptime(value, time_format))
                     else:
                         setattr(self, key, value)
-                    else:
-                        self.id = str(uuid.uuid4())
-                        self.created_at = self.updated_at = datetime.now()
-                        storage.new(self)
+                else:
+                    self.id = str(uuid.uuid4())
+                    self.created_at = self.updated_at = datetime.now()
+                    storage.new(self)
 
     def save(self):
         """Updates the 'updated_at' attribute with the current datetime."""
