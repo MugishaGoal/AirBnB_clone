@@ -69,3 +69,13 @@ class FileStorage:
                     class_name, obj_id = key.split(".")
                     obj = models.classes[class_name](**value)
                     self.__objects[key] = obj
+
+models.classes = {
+        'BaseModel': BaseModel,
+        'User': User,
+        'Place': Place,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Review': Review,
+        }
