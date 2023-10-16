@@ -22,15 +22,16 @@ class BaseModel:
                         setattr(self, key, datetime.strptime(value, time_fmt))
                     else:
                         setattr(self, key, value)
-                else:
-                    self.id = str(uuid.uuid4())
-                    self.created_at = self.updated_at = datetime.now()
-                    storage.new(self)
+        if 'id' not in kwargs:
+            self.id = str(uuid4())
+        if 'created_at' not in kwargs:
+            self.created_at = self.updated_at = datetime.now()
+        models.storage.new(self)
 
     def save(self):
         """Updates the 'updated_at' attribute with the current datetime."""
         self.updated_at = datetime.now()
-        storage.save()
+        models.storage.save()
 
     def to_dict(self):
         """
@@ -40,13 +41,11 @@ class BaseModel:
         - 'created_at' and 'updated_at' are represented
         as ISO-formatted strings.
         """
-        class_name = self.__class__.__name__
-        return {
-            "__class__": class_name,
-            "id": self.id,
-            "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
-        }
+        rtrn_dict = self.__dict__.copy()
+        rtrn_dict["created_at"] = self.created_at.isoformat()
+        rtrn_dict["updated_at"] = self.updated_at.isoformat()
+        rtrn_dict["__class__"] = self.__class__.__name__
+        return rtrn_dict
 
     def __str__(self):
         """Returns a string representation of the object."""
