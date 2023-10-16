@@ -1,71 +1,49 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 """Defines the FileStorage class."""
 import json
 from models.base_model import BaseModel
-from os import path
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class FileStorage:
-    """
-    The `FileStorage` class is responsible for managing the storage
-    of instances in a JSON file.
+    """Represent an abstracted storage engine.
 
     Attributes:
-        __file_path (str): The path to the JSON file for storing instances.
-        __objects (dict): A dictionary to hold instances in memory.
-
-    Methods:
-        all(self): Retrieves all instances stored in memory (__objects).
-        new(self, obj): Adds a new instance to the dictionary of objects.
-        save(self): Serializes and saves instances from memory to the
-        JSON file.
-        reload(self): Deserializes and reloads instances from the JSON
-        file into memory.
-
+        __file_path (str): The name of the file to save objects to.
+        __objects (dict): A dictionary of instantiated objects.
     """
-
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        """
-        Retrieves all instances stored in memory (__objects).
-
-        Returns:
-            dict: A dictionary containing all stored instances.
-        """
-        return self.__objects
+        """Return the dictionary __objects."""
+        return FileStorage.__objects
 
     def new(self, obj):
-        """
-        Adds a new instance to the dictionary of objects.
-
-        Args:
-            obj (BaseModel): The instance to be added.
-        """
-        key = "{}.{}".format(obj.__class__.__name__, obj.id)
-        self.__objects[key] = obj
+        """Set in __objects obj with key <obj_class_name>.id"""
+        ocname = obj.__class__.__name__
+        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
 
     def save(self):
-        """
-        Serializes and saves instances from memory to the JSON file.
-        """
-        data = {}
-        for key, obj in self.__objects.items():
-            data[key] = obj.to_dict()
-        with open(self.__file_path, "w", encoding="utf-8") as file:
-            json.dump(data, file)
+        """Serialize __objects to the JSON file __file_path."""
+        odict = FileStorage.__objects
+        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        with open(FileStorage.__file_path, "w") as f:
+            json.dump(objdict, f)
 
     def reload(self):
-        """
-        Deserializes and reloads instances from the JSON file into memory.
-
-        If the JSON file exists, it reads the data and creates instances.
-        """
-        if path.exists(self.__file_path):
-            with open(self.__file_path, "r", encoding="utf-8") as file:
-                data = json.load(file)
-                for key, value in data.items():
-                    class_name, obj_id = key.split(".")
-                    obj = models.classes[class_name](**value)
-                    self.__objects[key] = obj
+        """Deserialize the JSON file __file_path to __objects, if it exists."""
+        try:
+            with open(FileStorage.__file_path) as f:
+                objdict = json.load(f)
+                for o in objdict.values():
+                    cls_name = o["__class__"]
+                    del o["__class__"]
+                    self.new(eval(cls_name)(**o))
+        except FileNotFoundError:
+            return
