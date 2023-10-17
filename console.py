@@ -175,52 +175,46 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         """
         Usage: update <class> <id> <attribute_name> <attribute_value> or
-       <class>.update(<id>, <attribute_name>, <attribute_value>) or
-       <class>.update(<id>, <dictionary>)
+        <class>.update(<id>, <attribute_name>, <attribute_value>) or
+        <class>.update(<id>, <dictionary>)
         Updates a class instance of a given id by adding or updating
         a given attribute key/value pair or dictionary.
         """
-        argl = parse(arg)
+        args = parse(arg)
         objdict = storage.all()
 
-        if len(argl) == 0:
+        if len(args) < 2:
             print("** class name missing **")
-            return False
-        if argl[0] not in HBNBCommand.__classes:
+            return
+        class_name = args[0]
+        if class_name not in HBNBCommand.__classes:
             print("** class doesn't exist **")
-            return False
-        if len(argl) == 1:
-            print("** instance id missing **")
-            return False
-        if "{}.{}".format(argl[0], argl[1]) not in objdict.keys():
-            print("** no instance found **")
-            return False
-        if len(argl) == 2:
-            print("** attribute name missing **")
-            return False
-        if len(argl) == 3:
-            try:
-                type(eval(argl[2])) != dict
-            except NameError:
-                print("** value missing **")
-                return False
+            return
 
-        if len(argl) == 4:
-            obj = objdict["{}.{}".format(argl[0], argl[1])]
-            if argl[2] in obj.__class__.__dict__.keys():
-                valtype = type(obj.__class__.__dict__[argl[2]])
-                obj.__dict__[argl[2]] = valtype(argl[3])
-            else:
-                obj.__dict__[argl[2]] = argl[3]
-        elif type(eval(argl[2])) == dict:
-            obj = objdict["{}.{}".format(argl[0], argl[1])]
-            for k, v in eval(argl[2]).items():
-                if (k in obj.__class__.__dict__.keys() and
-                        type(obj.__class__.__dict__[k]) in {str, int, float}):
-                    valtype = type(obj.__class__.__dict__[k])
-                    obj.__dict__[k] = valtype(v)
-                else:
-                    obj.__dict__[k] = v
+        if len(args) < 3:
+            print("** instance id missing **")
+            return
+
+        obj_key = "{}.{}".format(class_name, args[1])
+        if obj_key not in objdict:
+            print("** no instance found **")
+            return
+
+        obj = objdict[obj_key]
+
+        if len(args) < 4:
+            print("** attribute name missing **")
+            return
+
+        attr_name = args[2]
+        if len(args) == 4:
+            attr_value = args[3]
+            setattr(obj, attr_name, attr_value)
+        elif len(args) == 3 and isinstance(eval(args[2]), dict):
+            attr_dict = eval(args[2])
+            for key, value in attr_dict.items():
+                setattr(obj, key, value)
+
         storage.save()
 
 
