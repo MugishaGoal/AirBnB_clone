@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-"""Defines unittests for models/state.py.
+"""Unit tests for the 'State' class in 'models/state.py.
 
-Unittest classes:
-    TestState_instantiation
-    TestState_save
-    TestState_to_dict
+Test Classes:
+- TestBaseModel_instantiation
+- TestBaseModel_save
+- TestBaseModel_to_dict
 """
 import os
 import models
@@ -15,7 +15,9 @@ from models.state import State
 
 
 class TestState_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation of the State class."""
+    """
+    Unit tests designed to evaluate the instantiation of the State class.
+    """
 
     def test_no_args_instantiates(self):
         self.assertEqual(State, type(State()))
@@ -45,13 +47,13 @@ class TestState_instantiation(unittest.TestCase):
 
     def test_two_states_different_created_at(self):
         st1 = State()
-        sleep(0.05)
+        sleep(0.02)
         st2 = State()
         self.assertLess(st1.created_at, st2.created_at)
 
     def test_two_states_different_updated_at(self):
         st1 = State()
-        sleep(0.05)
+        sleep(0.02)
         st2 = State()
         self.assertLess(st1.updated_at, st2.updated_at)
 
@@ -74,8 +76,8 @@ class TestState_instantiation(unittest.TestCase):
     def test_instantiation_with_kwargs(self):
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        st = State(id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(st.id, "345")
+        st = State(id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(st.id, "360")
         self.assertEqual(st.created_at, dt)
         self.assertEqual(st.updated_at, dt)
 
@@ -85,7 +87,10 @@ class TestState_instantiation(unittest.TestCase):
 
 
 class TestState_save(unittest.TestCase):
-    """Unittests for testing save method of the State class."""
+    """
+    Unit tests created to assess the functionality of the save method
+    in the State class.
+    """
 
     @classmethod
     def setUp(self):
@@ -106,19 +111,19 @@ class TestState_save(unittest.TestCase):
 
     def test_one_save(self):
         st = State()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = st.updated_at
         st.save()
         self.assertLess(first_updated_at, st.updated_at)
 
     def test_two_saves(self):
         st = State()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = st.updated_at
         st.save()
         second_updated_at = st.updated_at
         self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
+        sleep(0.02)
         st.save()
         self.assertLess(second_updated_at, st.updated_at)
 
@@ -136,7 +141,7 @@ class TestState_save(unittest.TestCase):
 
 
 class TestState_to_dict(unittest.TestCase):
-    """Unittests for testing to_dict method of the State class."""
+    """Unit tests designed to evaluate the to_dict methodthe State class."""
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(State().to_dict()))
@@ -150,9 +155,9 @@ class TestState_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         st = State()
-        st.middle_name = "Holberton"
+        st.middle_name = "My BaseModel"
         st.my_number = 98
-        self.assertEqual("Holberton", st.middle_name)
+        self.assertEqual("middle_name", st.middle_name)
         self.assertIn("my_number", st.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
