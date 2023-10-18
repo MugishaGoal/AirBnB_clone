@@ -1,5 +1,21 @@
 #!/usr/bin/python3
-"""Defines unittests for models/engine/file_storage.py."""
+"""
+Unit tests are provided for the 'file_storage.py' module in the 'engine'
+package of the 'models' module.
+
+Test Methods:
+
+test_file_storage_instantiation_no_args: Tests the instantiation of
+'FileStorage' without any arguments.
+test_file_storage_instantiation_with_arg: Tests the instantiation of
+'FileStorage' with invalid arguments.
+test_file_storage_file_path_is_private_str: Tests if the '__file_path'
+attribute of 'FileStorage' is a private string attribute.
+test_file_storage_objects_is_private_dict: Tests if the '__objects' attribute
+of 'FileStorage' is a private dictionary attribute.
+test_storage_initializes: Tests if the 'models.storage' instance is correctly
+initialized with the 'FileStorage' class.
+"""
 
 import os
 import json
