@@ -1,10 +1,12 @@
 #!/usr/bin/python3
-"""Defines unittests for models/amenity.py.
+"""Unittests for examining the behavior of the Amenity within
+models/amenity.py module
 
-Unittest classes:
-    TestAmenity_instantiation
-    TestAmenity_save
-    TestAmenity_to_dict
+Test Classes:
+    Test Classes:
+- TestAmenity_instantiation
+- TestAmenity_save
+- TestAmenity_to_dict
 """
 import os
 import models
@@ -45,13 +47,13 @@ class TestAmenity_instantiation(unittest.TestCase):
 
     def test_two_amenities_different_created_at(self):
         am1 = Amenity()
-        sleep(0.05)
+        sleep(0.02)
         am2 = Amenity()
         self.assertLess(am1.created_at, am2.created_at)
 
     def test_two_amenities_different_updated_at(self):
         am1 = Amenity()
-        sleep(0.05)
+        sleep(0.02)
         am2 = Amenity()
         self.assertLess(am1.updated_at, am2.updated_at)
 
@@ -75,8 +77,8 @@ class TestAmenity_instantiation(unittest.TestCase):
         """instantiation with kwargs test method"""
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        am = Amenity(id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(am.id, "345")
+        am = Amenity(id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(am.id, "360")
         self.assertEqual(am.created_at, dt)
         self.assertEqual(am.updated_at, dt)
 
@@ -107,19 +109,19 @@ class TestAmenity_save(unittest.TestCase):
 
     def test_one_save(self):
         am = Amenity()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = am.updated_at
         am.save()
         self.assertLess(first_updated_at, am.updated_at)
 
     def test_two_saves(self):
         am = Amenity()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = am.updated_at
         am.save()
         second_updated_at = am.updated_at
         self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
+        sleep(0.02)
         am.save()
         self.assertLess(second_updated_at, am.updated_at)
 
@@ -151,9 +153,9 @@ class TestAmenity_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         am = Amenity()
-        am.middle_name = "Holberton"
+        am.middle_name = "My BaseModel"
         am.my_number = 98
-        self.assertEqual("Holberton", am.middle_name)
+        self.assertEqual("middle_name", am.middle_name)
         self.assertIn("my_number", am.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
