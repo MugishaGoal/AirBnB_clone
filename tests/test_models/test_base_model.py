@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-"""Defines unittests for models/base_model.py.
+"""
+Unittests for the BaseModel class in models/base_model.py.
 
-Unittest classes:
-    TestBaseModel_instantiation
-    TestBaseModel_save
-    TestBaseModel_to_dict
+Test Classes:
+- TestBaseModel_instantiation
+- TestBaseModel_save
+- TestBaseModel_to_dict
 """
 import os
 import models
@@ -15,7 +16,7 @@ from models.base_model import BaseModel
 
 
 class TestBaseModel_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation of the BaseModel class."""
+    """Unit tests for verifying the instantiation of the BaseModel class."""
 
     def test_no_args_instantiates(self):
         self.assertEqual(BaseModel, type(BaseModel()))
@@ -39,13 +40,13 @@ class TestBaseModel_instantiation(unittest.TestCase):
 
     def test_two_models_different_created_at(self):
         bm1 = BaseModel()
-        sleep(0.05)
+        sleep(0.02)
         bm2 = BaseModel()
         self.assertLess(bm1.created_at, bm2.created_at)
 
     def test_two_models_different_updated_at(self):
         bm1 = BaseModel()
-        sleep(0.05)
+        sleep(0.02)
         bm2 = BaseModel()
         self.assertLess(bm1.updated_at, bm2.updated_at)
 
@@ -68,8 +69,8 @@ class TestBaseModel_instantiation(unittest.TestCase):
     def test_instantiation_with_kwargs(self):
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        bm = BaseModel(id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(bm.id, "345")
+        bm = BaseModel(id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(bm.id, "360")
         self.assertEqual(bm.created_at, dt)
         self.assertEqual(bm.updated_at, dt)
 
@@ -80,8 +81,8 @@ class TestBaseModel_instantiation(unittest.TestCase):
     def test_instantiation_with_args_and_kwargs(self):
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        bm = BaseModel("12", id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(bm.id, "345")
+        bm = BaseModel("10", id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(bm.id, "360")
         self.assertEqual(bm.created_at, dt)
         self.assertEqual(bm.updated_at, dt)
 
@@ -109,19 +110,19 @@ class TestBaseModel_save(unittest.TestCase):
 
     def test_one_save(self):
         bm = BaseModel()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = bm.updated_at
         bm.save()
         self.assertLess(first_updated_at, bm.updated_at)
 
     def test_two_saves(self):
         bm = BaseModel()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = bm.updated_at
         bm.save()
         second_updated_at = bm.updated_at
         self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
+        sleep(0.02)
         bm.save()
         self.assertLess(second_updated_at, bm.updated_at)
 
@@ -154,7 +155,7 @@ class TestBaseModel_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         bm = BaseModel()
-        bm.name = "Holberton"
+        bm.name = "My BaseModel"
         bm.my_number = 98
         self.assertIn("name", bm.to_dict())
         self.assertIn("my_number", bm.to_dict())
