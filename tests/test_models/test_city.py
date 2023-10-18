@@ -1,10 +1,9 @@
 #!/usr/bin/python3
 """Defines unittests for models/city.py.
-
-Unittest classes:
-    TestCity_instantiation
-    TestCity_save
-    TestCity_to_dict
+Test classes:
+- TestCity_instantiation
+- TestCity_save
+- TestCity_to_dict
 """
 import os
 import models
@@ -15,7 +14,7 @@ from models.city import City
 
 
 class TestCity_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation of the City class."""
+    """Unit tests for verifying the instantiation of the City class."""
 
     def test_no_args_instantiates(self):
         self.assertEqual(City, type(City()))
@@ -51,13 +50,13 @@ class TestCity_instantiation(unittest.TestCase):
 
     def test_two_cities_different_created_at(self):
         cy1 = City()
-        sleep(0.05)
+        sleep(0.02)
         cy2 = City()
         self.assertLess(cy1.created_at, cy2.created_at)
 
     def test_two_cities_different_updated_at(self):
         cy1 = City()
-        sleep(0.05)
+        sleep(0.02)
         cy2 = City()
         self.assertLess(cy1.updated_at, cy2.updated_at)
 
@@ -80,8 +79,8 @@ class TestCity_instantiation(unittest.TestCase):
     def test_instantiation_with_kwargs(self):
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        cy = City(id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(cy.id, "345")
+        cy = City(id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(cy.id, "360")
         self.assertEqual(cy.created_at, dt)
         self.assertEqual(cy.updated_at, dt)
 
@@ -91,7 +90,10 @@ class TestCity_instantiation(unittest.TestCase):
 
 
 class TestCity_save(unittest.TestCase):
-    """Unittests for testing save method of the City class."""
+    """
+    Unit tests created to assess the functionality of the save
+    method in the City class.
+    """
 
     @classmethod
     def setUp(self):
@@ -112,19 +114,19 @@ class TestCity_save(unittest.TestCase):
 
     def test_one_save(self):
         cy = City()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = cy.updated_at
         cy.save()
         self.assertLess(first_updated_at, cy.updated_at)
 
     def test_two_saves(self):
         cy = City()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = cy.updated_at
         cy.save()
         second_updated_at = cy.updated_at
         self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
+        sleep(0.02)
         cy.save()
         self.assertLess(second_updated_at, cy.updated_at)
 
@@ -142,7 +144,10 @@ class TestCity_save(unittest.TestCase):
 
 
 class TestCity_to_dict(unittest.TestCase):
-    """Unittests for testing to_dict method of the City class."""
+    """
+    Unit tests designed to evaluate the to_dict method
+    within the City class.
+    """
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(City().to_dict()))
@@ -156,9 +161,9 @@ class TestCity_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         cy = City()
-        cy.middle_name = "Holberton"
+        cy.middle_name = "My BaseModel"
         cy.my_number = 98
-        self.assertEqual("Holberton", cy.middle_name)
+        self.assertEqual("middle_name", cy.middle_name)
         self.assertIn("my_number", cy.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
