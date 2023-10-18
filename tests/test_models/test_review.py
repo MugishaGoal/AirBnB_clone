@@ -1,10 +1,13 @@
 #!/usr/bin/python3
-"""Defines unittests for models/review.py.
+"""
+Unittests for examining the behavior of the Review class
+within the models/review.py module.
 
-Unittest classes:
-    TestReview_instantiation
-    TestReview_save
-    TestReview_to_dict
+Includes test classes:
+
+TestReview_instantiation: Tests instantiation of Review instances.
+TestReview_save: Tests the save method in the Review class.
+TestReview_to_dict: Tests the to_dict method in the Review class.
 """
 import os
 import models
@@ -15,7 +18,9 @@ from models.review import Review
 
 
 class TestReview_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation of the Review class."""
+    """
+    Unit tests designed to evaluate the instantiation of the Review class.
+    """
 
     def test_no_args_instantiates(self):
         self.assertEqual(Review, type(Review()))
@@ -57,13 +62,13 @@ class TestReview_instantiation(unittest.TestCase):
 
     def test_two_reviews_different_created_at(self):
         rv1 = Review()
-        sleep(0.05)
+        sleep(0.02)
         rv2 = Review()
         self.assertLess(rv1.created_at, rv2.created_at)
 
     def test_two_reviews_different_updated_at(self):
         rv1 = Review()
-        sleep(0.05)
+        sleep(0.02)
         rv2 = Review()
         self.assertLess(rv1.updated_at, rv2.updated_at)
 
@@ -86,8 +91,8 @@ class TestReview_instantiation(unittest.TestCase):
     def test_instantiation_with_kwargs(self):
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        rv = Review(id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(rv.id, "345")
+        rv = Review(id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(rv.id, "360")
         self.assertEqual(rv.created_at, dt)
         self.assertEqual(rv.updated_at, dt)
 
@@ -97,7 +102,10 @@ class TestReview_instantiation(unittest.TestCase):
 
 
 class TestReview_save(unittest.TestCase):
-    """Unittests for testing save method of the Review class."""
+    """
+    Unit tests created to assess the functionality of the save
+    method in the Review class.
+    """
 
     @classmethod
     def setUp(self):
@@ -118,19 +126,19 @@ class TestReview_save(unittest.TestCase):
 
     def test_one_save(self):
         rv = Review()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = rv.updated_at
         rv.save()
         self.assertLess(first_updated_at, rv.updated_at)
 
     def test_two_saves(self):
         rv = Review()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = rv.updated_at
         rv.save()
         second_updated_at = rv.updated_at
         self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
+        sleep(0.02)
         rv.save()
         self.assertLess(second_updated_at, rv.updated_at)
 
@@ -148,7 +156,10 @@ class TestReview_save(unittest.TestCase):
 
 
 class TestReview_to_dict(unittest.TestCase):
-    """Unittests for testing to_dict method of the Review class."""
+    """
+    Unit tests designed to evaluate the to_dict method within
+    the Review class.
+    """
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(Review().to_dict()))
@@ -162,9 +173,9 @@ class TestReview_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         rv = Review()
-        rv.middle_name = "Holberton"
+        rv.middle_name = "My ModeBase"
         rv.my_number = 98
-        self.assertEqual("Holberton", rv.middle_name)
+        self.assertEqual("middle_name", rv.middle_name)
         self.assertIn("my_number", rv.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
