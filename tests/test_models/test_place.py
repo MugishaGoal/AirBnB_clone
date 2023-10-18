@@ -1,10 +1,11 @@
 #!/usr/bin/python3
-"""Defines unittests for models/place.py.
+"""Unittests for examining the behavior of the 'Place' class
+within models/place.py.
 
-Unittest classes:
-    TestPlace_instantiation
-    TestPlace_save
-    TestPlace_to_dict
+Test classes:
+- TestPlace_instantiation
+- TestPlace_save
+- TestPlace_to_dict
 """
 import os
 import models
@@ -15,7 +16,10 @@ from models.place import Place
 
 
 class TestPlace_instantiation(unittest.TestCase):
-    """Unittests for testing instantiation of the Place class."""
+    """
+    Unit tests designed to evaluate the instantiation of the
+    Place class.
+    """
 
     def test_no_args_instantiates(self):
         self.assertEqual(Place, type(Place()))
@@ -105,13 +109,13 @@ class TestPlace_instantiation(unittest.TestCase):
 
     def test_two_places_different_created_at(self):
         pl1 = Place()
-        sleep(0.05)
+        sleep(0.02)
         pl2 = Place()
         self.assertLess(pl1.created_at, pl2.created_at)
 
     def test_two_places_different_updated_at(self):
         pl1 = Place()
-        sleep(0.05)
+        sleep(0.02)
         pl2 = Place()
         self.assertLess(pl1.updated_at, pl2.updated_at)
 
@@ -134,8 +138,8 @@ class TestPlace_instantiation(unittest.TestCase):
     def test_instantiation_with_kwargs(self):
         dt = datetime.today()
         dt_iso = dt.isoformat()
-        pl = Place(id="345", created_at=dt_iso, updated_at=dt_iso)
-        self.assertEqual(pl.id, "345")
+        pl = Place(id="360", created_at=dt_iso, updated_at=dt_iso)
+        self.assertEqual(pl.id, "360")
         self.assertEqual(pl.created_at, dt)
         self.assertEqual(pl.updated_at, dt)
 
@@ -145,7 +149,10 @@ class TestPlace_instantiation(unittest.TestCase):
 
 
 class TestPlace_save(unittest.TestCase):
-    """Unittests for testing save method of the Place class."""
+    """
+    Unit tests created to assess the functionality of the save method
+    in the Place class.
+    """
 
     @classmethod
     def setUp(self):
@@ -166,19 +173,19 @@ class TestPlace_save(unittest.TestCase):
 
     def test_one_save(self):
         pl = Place()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = pl.updated_at
         pl.save()
         self.assertLess(first_updated_at, pl.updated_at)
 
     def test_two_saves(self):
         pl = Place()
-        sleep(0.05)
+        sleep(0.02)
         first_updated_at = pl.updated_at
         pl.save()
         second_updated_at = pl.updated_at
         self.assertLess(first_updated_at, second_updated_at)
-        sleep(0.05)
+        sleep(0.02)
         pl.save()
         self.assertLess(second_updated_at, pl.updated_at)
 
@@ -196,7 +203,10 @@ class TestPlace_save(unittest.TestCase):
 
 
 class TestPlace_to_dict(unittest.TestCase):
-    """Unittests for testing to_dict method of the Place class."""
+    """
+    Unit tests designed to evaluate the to_dict method within
+    the Place class.
+    """
 
     def test_to_dict_type(self):
         self.assertTrue(dict, type(Place().to_dict()))
@@ -210,9 +220,9 @@ class TestPlace_to_dict(unittest.TestCase):
 
     def test_to_dict_contains_added_attributes(self):
         pl = Place()
-        pl.middle_name = "Holberton"
+        pl.middle_name = "My BaseModel"
         pl.my_number = 98
-        self.assertEqual("Holberton", pl.middle_name)
+        self.assertEqual("middle_name", pl.middle_name)
         self.assertIn("my_number", pl.to_dict())
 
     def test_to_dict_datetime_attributes_are_strs(self):
